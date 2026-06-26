@@ -6,11 +6,11 @@ export const site = {
   tagline: "Cooling Comfort, Engineered to Last",
   description:
     "Tirupati Aircon delivers expert HVAC installation, maintenance, and air quality solutions for homes, offices, and industrial facilities.",
-  phone: "+91 00000 00000",
-  email: "info@tirupatiaircon.com",
-  address: "Your Street, Your City, India",
+  phone: "+91 98102 95760",
+  email: "tirupatiaircon@hotmail.com",
+  address: "718, Sector 51, Gurugram",
   hours: "Mon–Sat: 9:00 AM – 7:00 PM",
-  yearFounded: 2008,
+  yearFounded: 2024,
   social: {
     linkedin: "#",
     instagram: "#",
@@ -58,8 +58,8 @@ export const services = [
 ];
 
 export const stats = [
-  { value: "15+", label: "Years of experience" },
-  { value: "1200+", label: "Projects delivered" },
+  { value: "3+", label: "Years of experience" },
+  { value: "100+", label: "Projects delivered" },
   { value: "98%", label: "Client retention" },
   { value: "24/7", label: "Support available" },
 ];
