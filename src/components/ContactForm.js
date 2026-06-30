@@ -1,9 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ContactForm() {
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    if (status === "sent" || status === "error") {
+      timerRef.current = setTimeout(() => setStatus("idle"), 5000);
+    }
+    return () => clearTimeout(timerRef.current);
+  }, [status]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -22,10 +30,8 @@ export default function ContactForm() {
       if (res.ok) {
         setStatus("sent");
         form.reset();
-        setTimeout(() => setStatus("idle"), 5000);
       } else {
         setStatus("error");
-        setTimeout(() => setStatus("idle"), 5000);
       }
     } catch {
       setStatus("error");
