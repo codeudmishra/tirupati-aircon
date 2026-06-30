@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 
+const WEB3FORMS_KEY = "535b99c9-5271-4e2f-bd7d-e490c794c971";
+
 export default function ContactForm() {
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   const timerRef = useRef(null);
@@ -21,13 +23,13 @@ export default function ContactForm() {
     const data = new FormData(form);
 
     try {
-      const res = await fetch("/", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(data).toString(),
+        body: data,
       });
+      const json = await res.json();
 
-      if (res.ok) {
+      if (json.success) {
         setStatus("sent");
         form.reset();
       } else {
@@ -42,19 +44,13 @@ export default function ContactForm() {
     "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-brand-500/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-brand-500/20 backdrop-blur-sm";
 
   return (
-    <form
-      name="contact"
-      method="POST"
-      data-netlify="true"
-      netlify-honeypot="bot-field"
-      onSubmit={handleSubmit}
-      className="space-y-4"
-    >
-      {/* Required hidden fields for Netlify */}
-      <input type="hidden" name="form-name" value="contact" />
-      <p className="hidden">
-        <label>Don't fill this out: <input name="bot-field" /></label>
-      </p>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Web3Forms required fields */}
+      <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+      <input type="hidden" name="subject" value="New Enquiry — Tirupati Aircon Website" />
+      <input type="hidden" name="from_name" value="Tirupati Aircon Website" />
+      {/* Honeypot anti-spam */}
+      <input type="checkbox" name="botcheck" className="hidden" />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <input className={field} name="name" placeholder="Your name" required />
@@ -64,7 +60,7 @@ export default function ContactForm() {
       <select className={`${field} [&>option]:bg-ink-900`} name="service" defaultValue="">
         <option value="" disabled>What do you need?</option>
         <option>HVAC Installation</option>
-        <option>Maintenance & Repair</option>
+        <option>Maintenance &amp; Repair</option>
         <option>Air Quality Solutions</option>
         <option>Energy Efficiency</option>
         <option>Something else</option>
@@ -86,7 +82,7 @@ export default function ContactForm() {
       )}
       {status === "error" && (
         <div className="glass rounded-xl px-5 py-4 text-sm font-medium text-red-300 border border-red-500/20">
-          ✗ Something went wrong. Please call us directly at +91 98102 95760.
+          ✗ Something went wrong. Please call us at +91 98102 95760.
         </div>
       )}
     </form>
