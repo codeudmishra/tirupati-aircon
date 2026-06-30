@@ -7,7 +7,7 @@ export const site = {
   description:
     "Tirupati Aircon delivers expert HVAC installation, maintenance, and air quality solutions for homes, offices, and industrial facilities.",
   phone: "+91 98102 95760",
-  email: "tirupatiaircon@hotmail.com",
+  email: "support@tirupatiaircon.com",
   address: "718, Sector 51, Gurugram",
   hours: "Mon–Sat: 9:00 AM – 7:00 PM",
   yearFounded: 2024,
