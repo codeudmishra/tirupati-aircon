@@ -22,8 +22,10 @@ export default function ContactForm() {
       if (res.ok) {
         setStatus("sent");
         form.reset();
+        setTimeout(() => setStatus("idle"), 5000);
       } else {
         setStatus("error");
+        setTimeout(() => setStatus("idle"), 5000);
       }
     } catch {
       setStatus("error");
