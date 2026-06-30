@@ -3,19 +3,51 @@
 import { useState } from "react";
 
 export default function ContactForm() {
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setStatus("sent");
-    e.target.reset();
+    setStatus("sending");
+
+    const form = e.target;
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString(),
+      });
+
+      if (res.ok) {
+        setStatus("sent");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   }
 
   const field =
     "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-brand-500/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-brand-500/20 backdrop-blur-sm";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      name="contact"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      onSubmit={handleSubmit}
+      className="space-y-4"
+    >
+      {/* Required hidden fields for Netlify */}
+      <input type="hidden" name="form-name" value="contact" />
+      <p className="hidden">
+        <label>Don't fill this out: <input name="bot-field" /></label>
+      </p>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <input className={field} name="name" placeholder="Your name" required />
         <input className={field} name="phone" placeholder="Phone number" required />
@@ -30,15 +62,23 @@ export default function ContactForm() {
         <option>Something else</option>
       </select>
       <textarea className={field} name="message" rows={4} placeholder="Tell us about your space…" />
+
       <button
         type="submit"
-        className="btn-glow w-full rounded-full py-4 font-semibold text-white text-sm tracking-wide"
+        disabled={status === "sending"}
+        className="btn-glow w-full rounded-full py-4 font-semibold text-white text-sm tracking-wide disabled:opacity-60 disabled:cursor-not-allowed transition"
       >
-        Send Message →
+        {status === "sending" ? "Sending…" : "Send Message →"}
       </button>
+
       {status === "sent" && (
         <div className="glass rounded-xl px-5 py-4 text-sm font-medium text-brand-300 border border-brand-500/20">
           ✓ Message received — we'll get back to you within 24 hours.
+        </div>
+      )}
+      {status === "error" && (
+        <div className="glass rounded-xl px-5 py-4 text-sm font-medium text-red-300 border border-red-500/20">
+          ✗ Something went wrong. Please call us directly at +91 98102 95760.
         </div>
       )}
     </form>
