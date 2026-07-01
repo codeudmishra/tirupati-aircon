@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-const WEB3FORMS_KEY = "535b99c9-5271-4e2f-bd7d-e490c794c971";
+const WEB3FORMS_KEY = "5bf06973-b2eb-4cf4-a18c-ed060249642f";
 
 export default function ContactForm() {
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
