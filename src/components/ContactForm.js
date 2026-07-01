@@ -20,12 +20,24 @@ export default function ContactForm() {
     setStatus("sending");
 
     const form = e.target;
-    const data = new FormData(form);
+    const fd = new FormData(form);
+
+    const payload = {
+      access_key: WEB3FORMS_KEY,
+      subject: "New Enquiry — Tirupati Aircon Website",
+      from_name: "Tirupati Aircon Website",
+      name: fd.get("name"),
+      phone: fd.get("phone"),
+      email: fd.get("email"),
+      service: fd.get("service"),
+      message: fd.get("message") || "",
+    };
 
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: data,
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
 
@@ -33,9 +45,11 @@ export default function ContactForm() {
         setStatus("sent");
         form.reset();
       } else {
+        console.error("Web3Forms error:", json);
         setStatus("error");
       }
-    } catch {
+    } catch (err) {
+      console.error("Submit error:", err);
       setStatus("error");
     }
   }
@@ -45,12 +59,6 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Web3Forms required fields */}
-      <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
-      <input type="hidden" name="subject" value="New Enquiry — Tirupati Aircon Website" />
-      <input type="hidden" name="from_name" value="Tirupati Aircon Website" />
-      {/* Honeypot anti-spam */}
-      <input type="checkbox" name="botcheck" className="hidden" />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <input className={field} name="name" placeholder="Your name" required />
